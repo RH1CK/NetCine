@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
 	<setting label="[B][COLOR blue]Onde baixar:[/COLOR][/B]" type="lsep" /> 
-	<setting label="[COLOR blue]http://bit.ly/NETCINE[/COLOR]" type="lsep" />
+	<setting label="[COLOR blue]http://bit.ly/netcinekodi[/COLOR]" type="lsep" />
 	<setting id="versao" label="Versao do addon" type="text" default="18.03.13" visible="eq(-1,false)" />
 	<setting id="makeGroups" type="text" label="30036" default="true" visible="eq(-1,false)"/>
 	<setting id="Cat" label="comedia" type="text" default="0" visible="eq(-2,false)" />
