@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.NetCine" name="NetCine" version="1.0" provider-name="Net Cine">
+  <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">NetCine</summary>
+    <description lang="en">NetCine</description>
+    <platform>all</platform>
+	<news>
+	</news>
+  </extension>
+</addon>
