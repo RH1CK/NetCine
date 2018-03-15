@@ -18,6 +18,7 @@ cacheDir = os.path.join(addon_data_dir, "cache")
 if not os.path.exists(cacheDir):
 	os.makedirs(cacheDir)
 
+Versao = Addon.getSetting("versao")
 Cat = Addon.getSetting("Cat")
 Clista=[ "todos",                     "acao", "animacao", "aventura", "comedia", "drame", "fantasia", "ficcao-cientifica", "romance", "suspense", "terror"]
 Clista2=["Sem filtro (Mostrar Todos)","Acao", "Animacao", "Aventura", "Comedia", "Drama", "Fantasia", "Ficcao Cientifica", "Romance", "Suspense", "Terror"]
@@ -35,6 +36,7 @@ if not (os.path.isfile(favoritesFile)):
 #makeGroups = Addon.getSetting("makeGroups") == "true"
 makeGroups = "true"
 URLP="http://cubeplay.000webhostapp.com/nc/"
+#URLP="http://localhost:8080/nc/"
 	
 def getLocaleString(id):
 	return Addon.getLocalizedString(id).encode('utf-8')
@@ -42,15 +44,18 @@ def getLocaleString(id):
 def Categories(): #70
 	#AddDir("[B]{0}: {1}[/B] - {2} ".format(getLocaleString(30036), getLocaleString(30037) if makeGroups else getLocaleString(30038) , getLocaleString(30039)), "setting" ,50 ,os.path.join(iconsDir, "setting.png"), isFolder=False)
 	try:
-		link = urllib2.urlopen( URLP + "list.txt" ).read().replace('\n','').replace('\r','')
+		uversao = urllib2.urlopen( URLP + "version.txt" ).read()
 		AddDir("[COLOR blue][B][Series][/B][/COLOR]" , URLP + "listTVshow.php", 60, "https://walter.trakt.tv/images/shows/000/098/898/fanarts/thumb/bca6f8bc3c.jpg", "https://walter.trakt.tv/images/shows/000/098/898/fanarts/thumb/bca6f8bc3c.jpg", index=0, cacheMin = "0")
 		AddDir("[COLOR yellow][B][Filmes][/B][/COLOR]" , URLP + "listMovies.php", 71, "https://walter.trakt.tv/images/movies/000/181/312/fanarts/thumb/e30b344522.jpg", "https://walter.trakt.tv/images/movies/000/181/312/fanarts/thumb/e30b344522.jpg", index=0, cacheMin = "0")
 		AddDir("[COLOR yellow][B][Genero dos Filmes]:[/B] " + Clista2[int(Cat)] +"[/COLOR]", "url" ,80 ,"https://lh5.ggpht.com/gv992ET6R_InCoMXXwIbdRLJczqOHFfLxIeY-bN2nFq0r8MDe-y-cF2aWq6Qy9P_K-4=w300", "https://lh5.ggpht.com/gv992ET6R_InCoMXXwIbdRLJczqOHFfLxIeY-bN2nFq0r8MDe-y-cF2aWq6Qy9P_K-4=w300", isFolder=False)
+		AddDir("[COLOR green][B][Favoritos NetCine][/B][/COLOR]", "favorites" ,30 , "http://icons.iconarchive.com/icons/royalflushxx/systematrix/256/Favorites-icon.png", "http://icons.iconarchive.com/icons/royalflushxx/systematrix/256/Favorites-icon.png")
+		if uversao != Versao:
+			AddDir("[B][Atualizacao]:[/B] http://bit.ly/netcinekodi", "config" ,0 ,"http://cdn.blog.hu/an/antivirus/image/201605/hav6.jpg", "http://cdn.blog.hu/an/antivirus/image/201605/hav6.jpg", isFolder=False, info="Ha uma nova versao!\r\nBaixe o addon em http://bit.ly/netcinekodi")
 	except urllib2.URLError, e:
-		AddDir("Server offline, tente novamente em alguns minutos" , "", 0, "", "", 0, cacheMin = "0")
-		AddDir("Verifique se o addon esta atualizado em:" , "", 0, "", "", 0, cacheMin = "0")
-		AddDir("http://bit.ly/NETCINE" , "", 0, "", "", 0, cacheMin = "0")
-	AddDir("[COLOR green][B][Favoritos NetCine][/B][/COLOR]", "favorites" ,30 , "http://icons.iconarchive.com/icons/royalflushxx/systematrix/256/Favorites-icon.png", "http://icons.iconarchive.com/icons/royalflushxx/systematrix/256/Favorites-icon.png")
+		AddDir("Server offline, tente novamente em alguns minutos" , "setting", 50, "", "", 0, cacheMin = "0", isFolder=False)
+		#AddDir("Verifique se o addon esta atualizado em:" , "setting", 50, "", "", 0, cacheMin = "0, isFolder=False")
+		AddDir("http://bit.ly/NETCINE" , "setting", 50, "", "", 0, cacheMin = "0", isFolder=False)
+	AddDir("[B][Sobre o Addon][/B]", "config" ,0 ,"http://www.iconsplace.com/icons/preview/orange/about-256.png", "http://www.iconsplace.com/icons/preview/orange/about-256.png", isFolder=False, info="Addon modificado do PlaylistLoader 1.2.0 por Avigdor\r https://github.com/avigdork/xbmc-avigdork.\r\nNao somos responsaveis por colocar o conteudo online, apenas indexamos.\r\nPara sugestoes e report de bugs nossa pagina no FB: [COLOR blue]http://fb.com/NetCineKodi[/COLOR]")
 
 def PlayS(): #62
 	try:
@@ -239,20 +244,18 @@ def AddDir(name, url, mode, iconimage='', logos='', index=-1, move=0, isFolder=T
 		liz.setProperty('IsPlayable', 'true')
 	#if background != None:
 	#	liz.setProperty('fanart_image', background)
+	items = []
 	if mode == 1 or mode == 2:
 		items = []
 	elif mode== 61:
 		liz.addContextMenuItems(items = [('{0}'.format(getLocaleString(30009)), 'XBMC.RunPlugin({0}?url={1}&mode=31&iconimage={2}&name={3})'.format(sys.argv[0], urllib.quote_plus(url), urllib.quote_plus(iconimage), urllib.quote_plus(name)))])
 	elif mode== 79:
 		liz.addContextMenuItems(items = [('{0}'.format(getLocaleString(30009)), 'XBMC.RunPlugin({0}?url={1}&mode=72&iconimage={2}&name={3})'.format(sys.argv[0], urllib.quote_plus(url), urllib.quote_plus(iconimage), urllib.quote_plus(name)))])
-	elif mode == 32:
-		items = [(getLocaleString(30010), 'XBMC.RunPlugin({0}?index={1}&mode=33)'.format(sys.argv[0], index)),
-		(getLocaleString(30026), 'XBMC.RunPlugin({0}?index={1}&mode=35)'.format(sys.argv[0], index)),
-		(getLocaleString(30027), 'XBMC.RunPlugin({0}?index={1}&mode=36)'.format(sys.argv[0], index)),
-		(getLocaleString(30028), 'XBMC.RunPlugin({0}?index={1}&mode=37)'.format(sys.argv[0], index))]
-		listMode = 38 # Favourits
-	if mode == 1 or mode == 2 or mode == 32:
-		items += []
+	if info=="Favoritos":
+		items = [("Remover dos favoritos", 'XBMC.RunPlugin({0}?index={1}&mode=33)'.format(sys.argv[0], index)),
+		(getLocaleString(30030), 'XBMC.RunPlugin({0}?index={1}&mode={2}&move=-1)'.format(sys.argv[0], index, 38)),
+		(getLocaleString(30031), 'XBMC.RunPlugin({0}?index={1}&mode={2}&move=1)'.format(sys.argv[0], index, 38)),
+		(getLocaleString(30032), 'XBMC.RunPlugin({0}?index={1}&mode={2}&move=0)'.format(sys.argv[0], index, 38))]
 		liz.addContextMenuItems(items)
 	if mode == 10:
 		urlParams['index'] = index
@@ -293,7 +296,7 @@ def ListFavorites():
 	chList = common.ReadList(favoritesFile)
 	i = 0
 	for channel in chList:
-		AddDir(channel["name"].encode("utf-8"), channel["url"].encode("utf-8"), channel["mode"], channel["image"].encode("utf-8"), index=i, isFolder=True, IsPlayable=False)
+		AddDir(channel["name"].encode("utf-8"), channel["url"].encode("utf-8"), channel["mode"], channel["image"].encode("utf-8"), channel["image"].encode("utf-8"), index=i, isFolder=True, IsPlayable=False, info="Favoritos")
 		i += 1
 		
 def AddNewFavorite():
